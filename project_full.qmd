@@ -1,0 +1,1052 @@
+---
+title: "Effective Predictive Model for Loan Approval Status"
+format: html
+editor: visual
+---
+
+### Abstract:
+
+This study focuses on developing a predictive model to accurately determine loan approval status, a critical component in financial decision-making. Utilizing a dataset comprising various applicant attributes such as income levels, credit history, and loan amounts, we employed machine learning techniques to forecast the binary outcome of loan approval - approved or denied. Our approach encompassed data cleaning, handling missing values, and feature engineering to optimize the dataset for analysis. We then implemented a Random Forest classifier, renowned for its efficacy in handling complex, non-linear relationships within data. The model was rigorously evaluated using metrics like accuracy, precision, recall, and the F1 score to ensure its reliability. Additionally, Receiver Operating Characteristic (ROC) curves and the Area Under the Curve (AUC) were analyzed to assess the model's discriminative ability. The results indicated a strong predictive capability, showcasing the potential of machine learning in enhancing decision-making processes in the financial sector. This research contributes to the burgeoning field of financial analytics, offering insights into the application of advanced algorithms for credit risk assessment and providing a framework for financial institutions to improve their loan approval processes.
+
+### Introduction;
+
+In the rapidly changing landscape of financial services, the process of making loan approval decisions is a crucial intersection of technology and economics. The capacity to accurately forecast loan approval outcomes is vitally important for financial institutions to manage risk effectively. It also significantly influences the economic opportunities available to individuals and businesses. Our study is motivated by the need to leverage advanced statistical techniques to enhance these predictions, thereby facilitating more informed and equitable lending decisions.
+
+This research delves into the realm of statistical analysis, utilizing a variety of statistical methods to predict loan approval statuses. The use of statistical techniques in data analysis has a long-standing history, especially in the finance sector, where they play a pivotal role in understanding and modeling complex financial phenomena.
+
+The core objectives of our study include:
+
+1.  **Application of Statistical Methods:** We apply several statistical techniques, including logistic regression and probit models, among others, to predict the binary outcome of loan approvals. These methods are selected for their proven effectiveness in handling various types of data and their ability to reveal underlying relationships between variables.
+
+2.  **Data Preprocessing and Feature Engineering:** Recognizing the impact of data quality on statistical modeling, we undertake comprehensive data preprocessing. This involves addressing missing values, encoding categorical variables, and conducting feature engineering to improve the predictive quality of the dataset.
+
+3.  **Comparative Model Evaluation:** A key aspect of our research is the comparative analysis of these statistical models based on crucial performance metrics such as accuracy, precision, recall, the F1 score, and ROC-AUC scores. This thorough evaluation helps us assess not only the accuracy but also the robustness and practical applicability of each model in a real-world financial setting.
+
+4.  **Insights for Financial Institutions:** The study aims to provide valuable insights to financial institutions. By understanding the capabilities and limitations of various statistical models in predicting loan approvals, these institutions can enhance their risk assessment processes, potentially leading to more efficient and fair lending practices.
+
+Ultimately, this study is driven by the goal of integrating advanced statistical methodologies into the financial sector. Our aim is to go beyond mere risk mitigation, fostering a more data-driven, transparent, and efficient environment for lending decisions.
+
+### Data Description:
+
+Our study utilizes a comprehensive dataset sourced from a financial institution, specifically designed for assessing loan approval processes. The dataset comprises various attributes that are commonly considered by financial institutions when evaluating loan applications. Below is a detailed description of each variable in the dataset, including their nature and units of measurement where applicable.
+
+1.  **Loan_ID**: A unique identifier for each loan application. This is a nominal variable consisting of alphanumeric characters.
+
+2.  **Gender**: The gender of the applicant. This is a categorical variable with two levels: 'Male' and 'Female'.
+
+3.  **Married**: Marital status of the applicant. It is a binary categorical variable with 'Yes' indicating married and 'No' indicating unmarried.
+
+4.  **Dependents**: The number of dependents relying on the applicant's income. This ordinal variable is categorized as '0', '1', '2', '3+'.
+
+5.  **Education**: The educational background of the applicant. This categorical variable includes two levels: 'Graduate' and 'Not Graduate'.
+
+6.  **Self_Employed**: Indicates whether the applicant is self-employed. It is a binary categorical variable with 'Yes' and 'No' as possible values.
+
+7.  **ApplicantIncome**: The income of the applicant. This is a continuous variable measured in local currency units (e.g., USD, INR).
+
+8.  **CoapplicantIncome**: The income of the co-applicant. This is also a continuous variable and is measured in the same units as the ApplicantIncome.
+
+9.  **LoanAmount**: The loan amount requested by the applicant. This is a continuous variable, measured in thousands of local currency units.
+
+10. **Loan_Amount_Term**: The term over which the loan is to be repaid. This is a continuous variable, measured in months.
+
+11. **Credit_History**: A record of past loan repayments. It is a binary categorical variable, where '1' indicates a good credit history and '0' indicates a poor credit history.
+
+12. **Property_Area**: The type of area where the property is located. This categorical variable includes three levels: 'Urban', 'Semiurban', and 'Rural'.
+
+13. **Loan_Status**: The outcome variable indicating whether the loan was approved ('Y') or not ('N'). This is the primary binary categorical variable of interest in our analysis.
+
+The data is ideal for statistical analysis due to its diverse range of variables, encompassing demographic, financial, and credit-related attributes.
+
+In our analysis, each of these variables is carefully examined to understand their individual and collective impact on the likelihood of loan approval. The continuous variables such as ApplicantIncome, CoapplicantIncome, and LoanAmount offer quantitative insights, while the categorical variables like Gender, Education, and Property_Area provide qualitative perspectives. The interplay between these variables is central to our statistical modeling and subsequent predictions regarding loan approvals.
+
+### Goal:
+
+The overarching goal of our project is to utilize the provided dataset to develop a robust statistical model that can accurately predict the outcome of loan applications, specifically determining whether a loan will be approved or denied. This project aims to blend statistical theory with practical application, leveraging the available data to address a critical question in the financial sector: What factors most significantly influence the decision to approve or reject a loan application?
+
+#### Research Questions:
+
+1.  **Primary Research Question:**
+
+    -   What are the key determinants that significantly impact the likelihood of loan approval?
+
+2.  **Exploratory Questions:**
+
+    -   How does the applicant's income (both individual and co-applicant) affect the probability of loan approval?
+
+    -   Does the applicant's gender, marital status, number of dependents, or education level play a significant role in the loan approval process?
+
+    -   Is there a correlation between the loan amount, its term, and the approval decision?
+
+    -   Does the credit history of the applicant substantially affect the outcome of the loan application?
+
+    -   How does the property area (Urban, Semiurban, Rural) relate to the chances of getting a loan approved?
+
+3.  **Model-Specific Questions:**
+
+    -   Among the statistical models employed (such as logistic regression, probit models, etc.), which provides the most accurate predictions for loan approval?
+
+    -   How do different models compare in terms of key performance metrics like accuracy, precision, recall, F1 score, and ROC-AUC score?
+
+The answers to these questions are intended to provide a comprehensive understanding of the factors influencing loan approval decisions. By addressing these queries, we aim to create a model that not only serves as a predictive tool for financial institutions but also sheds light on the dynamics of loan approval processes, potentially revealing areas for improvement in lending practices and policies.
+
+Ultimately, our project seeks to bridge the gap between statistical theory and real-world financial applications, offering insights that could enhance decision-making processes in the lending industry.
+
+### Statistical Methods:
+
+Our study employs a suite of statistical methods to address the research questions, each chosen for its relevance and efficacy in binary outcome prediction. Below is an overview of the methods used, along with brief technical descriptions.
+
+1.  **Logistic Regression:**
+
+    -   Logistic regression is a popular method for binary classification problems. It models the probability of a binary response based on one or more predictor variables.
+
+    -   We explored three logistic regression models: the null model (with no predictors), the full model (with all predictors), and a stepwise model (selecting variables based on their statistical significance).
+
+2.  **Probit Model:**
+
+    -   Similar to logistic regression, the probit model is used for binary response data. It differs in that it uses the probit function (the inverse of the cumulative distribution function of the standard normal distribution) to model the relationship.
+
+3.  **Decision Trees:**
+
+    -   Decision trees are a non-parametric supervised learning method used for classification. They split the dataset into branches to form a tree structure based on decision rules inferred from the data.
+
+    -   The algorithm selects the best attribute at each node to split the data, aiming to maximize the homogeneity of the resulting sub-groups regarding the target variable.
+
+4.  **Random Forest:**
+
+    -   Random Forest is an ensemble learning method that operates by constructing multiple decision trees during training and outputting the mode of the classes for classification. It improves over a single decision tree by reducing the risk of overfitting.
+
+    -   Each tree is built on a different subset of the data, and the final prediction is made by averaging the predictions from all the trees.
+
+5.  **XGBoost:**
+
+    -   XGBoost (Extreme Gradient Boosting) is an advanced implementation of gradient boosting algorithms. It is highly efficient, flexible, and portable. XGBoost provides a parallel tree boosting that solves many data science problems quickly and accurately.
+
+    -   The model uses gradient descent to minimize errors in sequential tree building, effectively refining the model with each step.
+
+Each of these methods brings a unique approach to the problem, from the straightforward logistic and probit models focusing on individual variables' effects, to the more complex ensemble methods like Random Forest and XGBoost, which build upon multiple models for enhanced predictive power. The comparative analysis of these methods aims to identify which approach most effectively predicts loan approval outcomes, considering the dataset's specific characteristics and the underlying patterns within the data.
+
+```{r}
+df= read.csv("/Users/harshavardhan/Documents/stat/finalpro/loan_data_set.csv")
+head(df)
+```
+
+```{r}
+# Remove rows with NA values
+df <- na.omit(df)
+# Remove rows with empty strings
+df <- df[rowSums(df == "") == 0, ]
+df_cleaned  <- subset(df, select = -Loan_ID)
+missing_values <- sapply(df, function(x) sum(is.na(x)))
+```
+
+1.  **Categorical Variables**: The dataset includes categorical variables like 'Gender', 'Married', 'Dependents', 'Education', 'Self_Employed', 'Property_Area', and 'Loan_Status'. Each of these categories has 480 entries, indicating a complete dataset with no missing values.
+
+2.  **Numerical Variables**:
+
+    -   **ApplicantIncome**: Ranges from a minimum of 150 to a maximum of 81,000, with the median at 3,859 and the mean at 5,364, suggesting a right-skewed distribution.
+
+    -   **CoapplicantIncome**: Extends from 0 to 33,837, with a median of 1,084 and a mean of 1,581, also indicating a right-skewed distribution.
+
+    -   **LoanAmount**: Varies between 9 and 600, with a median of 128 and a mean of 144.7, suggesting a relatively symmetric distribution.
+
+    -   **Loan_Amount_Term**: Ranges from 36 to 480, predominantly centered around 360 as indicated by both the median and the most common quartile values.
+
+    -   **Credit_History**: A binary variable (ranging from 0 to 1) with a mean of 0.8542, indicating that most applicants have a positive credit history.
+
+## Exploratory Data Analysis
+
+```{r}
+#univariate
+
+summary(df)
+# Load necessary library
+library(ggplot2)
+
+# Histogram for ApplicantIncome
+ggplot(df, aes(x = ApplicantIncome)) + 
+    geom_histogram(binwidth = 500, fill = "blue", color = "black") +
+    theme_minimal() +
+    ggtitle("Histogram of ApplicantIncome")
+
+# Bar plot for Education
+ggplot(df, aes(x = Education)) + 
+    geom_bar(fill = "coral", color = "black") +
+    theme_minimal() +
+    ggtitle("Bar Plot of Education")
+```
+
+**ApplicantIncome**: Exhibits a right-skewed distribution with most applicants earning a lower income, while a few have substantially higher incomes, indicating significant income disparity among applicants.
+
+**Education**: Reveals that a large proportion of applicants are graduates, suggesting a possible correlation between higher education and the propensity to apply for loans, potentially due to educational expenses or investment in professional growth.
+
+**CoapplicantIncome**: Also right-skewed, many coapplicants report low or zero income, possibly reflecting the scenario where primary applicants do not always have a secondary earner or the coapplicant earns significantly less.
+
+**LoanAmount**: Shows a right-skew but with a tendency toward a normal distribution, centering on lower to mid-range loan values. This pattern might indicate a prevalence of applications for smaller loans, which are likely more frequent and have a higher approval rate.
+
+**Gender**: Indicates more male applicants than female, highlighting a gender gap in loan applications that warrants further exploration to understand any underlying societal or economic factors.
+
+**Married**: Suggests married individuals are more likely to apply for loans, hinting at increased financial needs or joint investments that come with marital responsibilities.
+
+**Loan_Amount_Term**: Is predominantly set to 360 months, aligning with standard home loan durations.
+
+**Credit_History**: The data shows most applicants have a good credit history, a key factor in loan approvals.
+
+```{r}
+#Hidden
+# Histogram for CoapplicantIncome
+ggplot(df, aes(x = CoapplicantIncome)) + 
+    geom_histogram(binwidth = 500, fill = "green", color = "black") +
+    theme_minimal() +
+    ggtitle("Histogram of CoapplicantIncome")
+
+# Histogram for LoanAmount
+ggplot(df, aes(x = LoanAmount)) + 
+    geom_histogram(binwidth = 50, fill = "purple", color = "black") +
+    theme_minimal() +
+    ggtitle("Histogram of LoanAmount")
+
+# Bar plot for Gender
+ggplot(df, aes(x = Gender)) + 
+    geom_bar(fill = "skyblue", color = "black") +
+    theme_minimal() +
+    ggtitle("Bar Plot of Gender")
+
+# Bar plot for Married
+ggplot(df, aes(x = Married)) + 
+    geom_bar(fill = "pink", color = "black") +
+    theme_minimal() +
+    ggtitle("Bar Plot of Married")
+```
+
+```{r}
+#bivariate
+# Boxplot for LoanAmount by Loan_Status
+ggplot(df, aes(x = Loan_Status, y = LoanAmount)) + 
+    geom_boxplot(fill = "lightcoral", color = "black") +
+    theme_minimal() +
+    ggtitle("LoanAmount by Loan_Status")
+
+
+# Side-by-side Bar plot for Married by Loan_Status
+ggplot(df, aes(x = Married, fill = Loan_Status)) + 
+    geom_bar(position = "dodge") +
+    theme_minimal() +
+    ggtitle("Married by Loan_Status")
+
+
+
+```
+
+-   **ApplicantIncome and CoapplicantIncome**: The income levels of applicants and coapplicants, when assessed by loan status, show significant variability and the presence of high-income outliers. Notably, higher incomes do not guarantee loan approval, suggesting that other factors are at play in the decision-making process.
+
+-   **Education**: Graduates are more likely to apply for loans, and the data shows a higher number of loans processed for this group. However, the approval rate does not disproportionately favor graduates, implying that educational attainment is not the sole determinant of loan success.
+
+-   **LoanAmount**: The amounts requested are broadly similar across approved and not approved loans, with a wider distribution for approved loans. This indicates that loan amount is considered within a broader context of the applicant's profile.
+
+-   **Gender and Marital Status**: There is a clear trend showing more men and married individuals among loan applicants, with these groups also receiving more approvals. This could reflect social and economic dynamics that influence loan application patterns and approval rates.
+
+```{r}
+#Hidden
+# Boxplot for ApplicantIncome by Loan_Status
+ggplot(df, aes(x = Loan_Status, y = ApplicantIncome)) + 
+    geom_boxplot(fill = "lightblue", color = "black") +
+    theme_minimal() +
+    ggtitle("ApplicantIncome by Loan_Status")
+
+# Side-by-side Bar plot for Education by Loan_Status
+ggplot(df, aes(x = Education, fill = Loan_Status)) + 
+    geom_bar(position = "dodge") +
+    theme_minimal() +
+    ggtitle("Education by Loan_Status")
+
+# Boxplot for CoapplicantIncome by Loan_Status
+ggplot(df, aes(x = Loan_Status, y = CoapplicantIncome)) + 
+    geom_boxplot(fill = "lightgreen", color = "black") +
+    theme_minimal() +
+    ggtitle("CoapplicantIncome by Loan_Status")
+
+# Side-by-side Bar plot for Gender by Loan_Status
+ggplot(df, aes(x = Gender, fill = Loan_Status)) + 
+    geom_bar(position = "dodge") +
+    theme_minimal() +
+    ggtitle("Gender by Loan_Status")
+```
+
+```{r}
+#Hidden
+# Load the necessary library
+library(ggplot2)
+
+# Let's say you want to examine the interaction between 'ApplicantIncome' and 'LoanAmount'
+# Create an interaction plot
+ggplot(df, aes(x = ApplicantIncome, y = LoanAmount)) +
+  geom_point(aes(color = Loan_Status)) +  # Use color to differentiate loan status
+  geom_smooth(method = "lm") +  # Add a regression line
+  facet_wrap(~ Loan_Status) +   # Create separate plots by loan status
+  labs(title = "Interaction Plot between ApplicantIncome and LoanAmount") +
+  theme_minimal()
+
+# Histogram to see the distribution
+hist(df$ApplicantIncome, main = "Histogram of ApplicantIncome", xlab = "ApplicantIncome")
+
+# Q-Q plot to check for normality
+qqnorm(df$ApplicantIncome)
+qqline(df$ApplicantIncome, col = "red")
+
+# Shapiro-Wilk normality test
+shapiro.test(df$ApplicantIncome)
+
+
+
+
+
+
+# Interaction plot with another continuous variable 'CoapplicantIncome'
+ggplot(df, aes(x = LoanAmount, y = CoapplicantIncome)) +
+  geom_point(aes(color = Loan_Status)) +  # Use color to differentiate loan status
+  geom_smooth(method = "lm") +  # Add a regression line
+  facet_wrap(~ Loan_Status) +   # Create separate plots by loan status
+  labs(title = "Interaction Plot between LoanAmount and CoapplicantIncome") +
+  theme_minimal()
+
+# Histogram for LoanAmount
+hist(df$LoanAmount, main = "Histogram of LoanAmount", xlab = "LoanAmount")
+
+# Q-Q plot for LoanAmount
+qqnorm(df$LoanAmount)
+qqline(df$LoanAmount, col = "red")
+
+# Shapiro-Wilk test for LoanAmount
+shapiro.test(df$LoanAmount)
+
+
+
+
+
+# Interaction plot with 'LoanAmount'
+ggplot(df, aes(x = CoapplicantIncome, y = LoanAmount)) +
+  geom_point(aes(color = Loan_Status)) +  # Use color to differentiate loan status
+  geom_smooth(method = "lm") +  # Add a regression line
+  facet_wrap(~ Loan_Status) +   # Create separate plots by loan status
+  labs(title = "Interaction Plot between CoapplicantIncome and LoanAmount") +
+  theme_minimal()
+
+# Histogram for CoapplicantIncome
+hist(df$CoapplicantIncome, main = "Histogram of CoapplicantIncome", xlab = "CoapplicantIncome")
+
+# Q-Q plot for CoapplicantIncome
+qqnorm(df$CoapplicantIncome)
+qqline(df$CoapplicantIncome, col = "red")
+
+# Shapiro-Wilk test for CoapplicantIncome
+shapiro.test(df$CoapplicantIncome)
+
+```
+
+The interaction plots from the loan dataset show a positive relationship between income and loan amount, with higher incomes linked to larger loan requests for both applicants and coapplicants. This pattern is consistent across both approved and denied loan statuses, suggesting that while income plays a role in loan amount determination, it is not the sole factor in loan approval decisions. The plots also reveal a wide spread of data and outliers, indicating varied loan behaviors among applicants.
+
+Shapiro-Wilk normality tests for ApplicantIncome, LoanAmount, and CoapplicantIncome indicate significant deviations from a normal distribution, with p-values far below the threshold of 0.05. The corresponding Q-Q plots confirm this non-normality, displaying a right-skewed distribution with a bulk of values on the lower end and fewer high values. These findings suggest that income data is not normally distributed, pointing towards the necessity for non-linear modeling or data transformation in further statistical analysis.
+
+```{r}
+#Hidden
+#log
+# Replace zeros with a small positive value if necessary
+df$ApplicantIncome[df$ApplicantIncome <= 0] <- 1
+df$CoapplicantIncome[df$CoapplicantIncome <= 0] <- 1
+df$LoanAmount[df$LoanAmount <= 0] <- 1
+
+# Apply log transformation
+df$Log_ApplicantIncome <- log(df$ApplicantIncome)
+df$Log_CoapplicantIncome <- log(df$CoapplicantIncome)
+df$Log_LoanAmount <- log(df$LoanAmount)
+
+
+# Shapiro-Wilk normality test
+shapiro.test(df$Log_ApplicantIncome)
+shapiro.test(df$Log_CoapplicantIncome)
+shapiro.test(df$Log_LoanAmount)
+
+
+# Histograms
+hist(df$Log_ApplicantIncome, main="Histogram of Log ApplicantIncome")
+hist(df$Log_CoapplicantIncome, main="Histogram of Log CoapplicantIncome")
+hist(df$Log_LoanAmount, main="Histogram of Log LoanAmount")
+
+# Q-Q plots
+qqnorm(df$Log_ApplicantIncome); qqline(df$Log_ApplicantIncome)
+qqnorm(df$Log_CoapplicantIncome); qqline(df$Log_CoapplicantIncome)
+qqnorm(df$Log_LoanAmount); qqline(df$Log_LoanAmount)
+```
+
+```{r}
+#correlation analysis
+
+# Load necessary libraries
+library(ggplot2)
+library(reshape2)
+
+df_corr <- df_cleaned
+
+# Assuming ApplicantIncome, CoapplicantIncome, and LoanAmount are your continuous variables
+# Calculating correlation matrix
+continuous_vars <- df_corr[, c("ApplicantIncome", "CoapplicantIncome", "LoanAmount")]
+cor_matrix <- cor(continuous_vars, use = "complete.obs", method = "pearson")
+
+# Melting the correlation matrix for visualization
+melted_cor_matrix <- melt(cor_matrix)
+
+# Visualizing the correlation matrix using heatmap
+ggplot(data = melted_cor_matrix, aes(x = Var1, y = Var2, fill = value)) +
+    geom_tile() +
+    scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                         midpoint = 0, limit = c(-1,1), space = "Lab", 
+                         name="Pearson\nCorrelation") +
+    theme_minimal() +
+    ggtitle("Correlation Matrix Heatmap") +
+    xlab("") + ylab("")
+
+
+# Density plot for LoanAmount with Loan Status overlay
+ggplot(df_corr, aes(x = LoanAmount, fill = Loan_Status)) +
+    geom_density(alpha = 0.5) +
+    theme_minimal() +
+    ggtitle("Density of LoanAmount by Loan Status")
+
+
+```
+
+The **"Correlation Matrix Heatmap"** visually illustrates the Pearson correlation between 'ApplicantIncome', 'CoapplicantIncome', and 'LoanAmount', with red showing positive and blue showing negative correlations. The varying intensities of color denote the strength of each relationship, hinting at significant associations among the financial variables in the dataset. Particularly, the heatmap may point out stronger correlations between certain pairs, suggesting interdependencies that could influence loan-related decisions.
+
+-   ApplicantIncome vs.CoapplicantIncome: There doesn't appear to be a strong linear correlation between these two variables, suggesting they may contribute independent information to a predictive model.
+
+-   ApplicantIncome vs. LoanAmount: There is a somewhat positive trend visible; as the applicant's income increases, the loan amount tends to increase, which makes sense intuitively.
+
+-   CoapplicantIncome vs. LoanAmount: The trend is less clear, but there may still be a positive correlation.
+
+Complementary to this, the series of plots, including the distribution histograms, density plots, and scatter plot with jitter, collectively explore the relationships between these financial attributes and loan status. Variations in applicant income distribution and loan amount densities across loan statuses may imply their influence on loan approval. The **"Mosaic Plot of Education and Loan Status"** and the **"Credit History vs ApplicantIncome"** plot further enrich this analysis by correlating educational background and credit history with loan outcomes, underscoring the multifaceted nature of loan approval criteria.
+
+```{r}
+#Hidden
+# Load necessary library
+library(ggmosaic)
+
+# Facet grid for ApplicantIncome by Loan Status
+ggplot(df_corr, aes(x = ApplicantIncome)) +
+    geom_histogram(binwidth = 500, fill = "skyblue") +
+    facet_grid(. ~ Loan_Status) +
+    theme_minimal() +
+    ggtitle("Distribution of ApplicantIncome Across Loan Status")
+
+# Mosaic plot for Education and Loan Status
+ggplot(data = df_corr) +
+    geom_mosaic(aes(weight = 1, x = product(Education), fill = Loan_Status)) +
+    theme_minimal() +
+    ggtitle("Mosaic Plot of Education and Loan Status")
+
+# Scatter plot with jitter for Credit_History and ApplicantIncome
+ggplot(df_corr, aes(x = Credit_History, y = ApplicantIncome, color = Loan_Status)) +
+    geom_jitter(alpha = 0.5) +
+    theme_minimal() +
+    ggtitle("Credit History vs ApplicantIncome with Loan Status")
+```
+
+```{r}
+#Hidden
+df$Gender <- as.factor(df$Gender)
+df$Married <- as.factor(df$Married)
+df$Dependents <- as.factor(df$Dependents)
+df$Education <- as.factor(df$Education)
+df$Self_Employed <- as.factor(df$Self_Employed)
+df$Credit_History <- as.factor(df$Credit_History)
+df$Property_Area <- as.factor(df$Property_Area)
+df$Loan_Status <- as.factor(df$Loan_Status)
+str(df)
+
+```
+
+```{r}
+# Assuming 'Yes' or 'Y' indicates a positive response and should be coded as 1
+# and 'No' or 'N' as a negative response to be coded as 0
+df_cleaned$Loan_Status <- as.numeric(df_cleaned$Loan_Status == "Yes" | df_cleaned$Loan_Status == "Y")
+null.model <- glm(df_cleaned$Loan_Status ~ 1, data= df_cleaned, family = binomial(link = "logit"))
+summary(null.model)
+```
+
+1.  **Coefficients**:
+
+    -   **(Intercept) Estimate (0.80792)**: This is the log-odds of the outcome being 1 (e.g., Loan approved) when no predictors are included in the model. To get the probability, you'd need to transform this using the logistic function.
+
+    -   **Std. Error (0.09884)**: This represents the standard error of the estimated intercept.
+
+    -   **z value (8.174)**: This is the test statistic for evaluating the null hypothesis that the coefficient is equal to zero. A higher absolute value indicates more evidence against the null hypothesis.
+
+    -   **Pr(\>\|z\|) (\< 2.98e-16)**: This p-value is extremely low, suggesting that the intercept is significantly different from zero.
+
+2.  **Null Deviance (593.05)**: This is a measure of the model fit. It represents the difference in log-likelihood between a model with only the intercept and a saturated model. The degrees of freedom here equal the number of observations minus 1.
+
+3.  **AIC (595.05)**: The Akaike Information Criterion is a measure of the relative quality of the statistical model for a given set of data. Lower AIC values indicate a better fit.
+
+### **Interpretation:**
+
+-   The significant intercept suggests that even without any predictors, the model can predict the **`Loan_Status`** to some extent. This could be due to an imbalance in the response variable (e.g., more 'Yes' than 'No').
+
+-   The null model is a baseline model; including predictors in your model should ideally reduce the deviance and improve the AIC.
+
+```{r}
+full.model <- glm(df_cleaned$Loan_Status ~ ., data= df_cleaned, family = binomial(link = "logit"))
+summary(full.model)
+```
+
+1.  **Coefficients**:
+
+    -   **Intercept and Variable Estimates**: These are the log-odds coefficients for each variable. For example, **`Credit_History`** has a highly positive coefficient, indicating a strong positive effect on the likelihood of loan approval when the credit history is positive.
+
+    -   **Std. Error**: Indicates the standard error of each coefficient estimate.
+
+    -   **z value**: The ratio of the estimate to its standard error. Larger absolute values indicate greater significance.
+
+    -   **Pr(\>\|z\|)**: P-values associated with the z-values. A small p-value (\< 0.05) suggests that the variable significantly contributes to the model.
+
+2.  **Significance Codes**:
+
+    -   Variables like **`MarriedYes`**, **`Credit_History`**, and **`Property_AreaSemiurban`** are statistically significant (p \< 0.05).
+
+3.  **Model Fit Indicators**:
+
+    -   **Null Deviance and Residual Deviance**: The decrease from null deviance to residual deviance indicates that the model with predictors fits the data better than the null model.
+
+    -   **AIC (Akaike Information Criterion)**: A lower AIC suggests a better model. The AIC here is 465.72, which is lower than that of the null model, indicating an improved fit.
+
+4.  **Notable Predictors**:
+
+    -   **Credit History (highly significant)**: With the largest coefficient, it suggests a strong influence on loan approval.
+
+    -   **Property_AreaSemiurban**: Also significant, indicating the location of the property plays a role in loan approval.
+
+    -   **MarriedYes**: Marginally significant, suggesting marital status might have an influence.
+
+5.  **Number of Fisher Scoring iterations**: The number of iterations taken to converge, which is 5 in this case.
+
+### **Interpretation and Considerations:**
+
+-   **Credit History** is a key predictor of loan approval. Its high positive coefficient suggests that having a positive credit history greatly increases the likelihood of loan approval.
+
+-   The significance of **Property_AreaSemiurban** indicates that applicants from semi-urban areas are more likely to get loan approval compared to the reference category (probably rural areas, since it's not included in the model output).
+
+-   **Marital Status** ('MarriedYes') also appears to influence the loan approval process, though less significantly than credit history or property area.
+
+-   Other variables, although included in the model, do not show a statistically significant relationship with the loan approval at the 0.05 significance level. This doesn't mean they are unimportant, but they might not have a strong individual impact in the presence of other variables.
+
+```{r}
+both.logit <- step(null.model, list(lower= formula(null.model),
+                                    upper= formula(full.model),
+                                    direction="both",data=df_cleaned))
+summary(both.logit)
+```
+
+```{r}
+summary(both.logit)
+```
+
+1.  **Coefficients**:
+
+    -   **Credit_History**: Highly significant (p \< 2e-16) with a positive coefficient, indicating a strong influence on loan approval when the credit history is positive.
+
+    -   **Property_AreaSemiurban**: Statistically significant (p = 0.00162) with a positive effect, suggesting applicants from semi-urban areas are more likely to get a loan approved compared to the base category.
+
+    -   **MarriedYes**: Significant (p = 0.00726) with a positive coefficient, indicating that being married is associated with a higher likelihood of loan approval.
+
+    -   **LoanAmount**: Marginally significant (p = 0.08664), indicating a possible but not strong effect on loan approval.
+
+    -   **Property_AreaUrban**: Not statistically significant in this model.
+
+2.  **Model Fit**:
+
+    -   The **AIC** has decreased to 454.72 compared to the previous full model, suggesting a better fit with fewer variables.
+
+    -   The **Residual Deviance** has also decreased compared to the full model, indicating an improved fit.
+
+3.  **Number of Fisher Scoring iterations**: The convergence in 4 iterations indicates the model fit is stable.
+
+```{r}
+full.probit <- glm(Loan_Status ~ ., data = df_cleaned, family = binomial(link = "probit"))
+summary(full.probit)
+
+```
+
+```{r}
+null.probit <- glm(Loan_Status ~ 1, data = df_cleaned, family = binomial(link = "probit"))
+summary(null.probit)
+
+```
+
+```{r}
+both.probit <- step(null.model, list(lower= formula(null.model),
+                                    upper= formula(full.model),
+                                    direction="both",data=df_cleaned))
+summary(both.probit)
+```
+
+-   **Credit_History**: Highly significant (p \< 2e-16) with a positive coefficient, indicating a strong influence on loan approval when the credit history is positive.
+
+-   **Property_AreaSemiurban**: Statistically significant (p = 0.00162) with a positive effect, suggesting applicants from semi-urban areas are more likely to get a loan approved compared to the base category.
+
+-   **MarriedYes**: Significant (p = 0.00726) with a positive coefficient, indicating that being married is associated with a higher likelihood of loan approval.
+
+-   **LoanAmount**: Marginally significant (p = 0.08664), indicating a possible but not strong effect on loan approval.
+
+```{r}
+library(pROC)
+```
+
+```{r}
+table(df_cleaned$Loan_Status)
+df_cleaned$Loan_Status <- as.factor(df_cleaned$Loan_Status)
+```
+
+```{r}
+set.seed(123457)
+train.prop <- 0.80
+auclist <- c()
+for (t in 1:500){
+  # Splitting the data
+  strats <- df_cleaned$Loan_Status
+  rr <- split(1:length(strats), strats)
+  idx <- sort(as.numeric(unlist(sapply(rr, 
+        function(x) sample(x, length(x)*train.prop)))))
+  df.train <- df_cleaned[idx, ]
+  df.test <- df_cleaned[-idx, ] 
+  
+  # Training the null model on the training set
+  null.model <- glm(Loan_Status ~ 1, data= df.train, family = binomial(link = "logit"))
+  
+  # Making predictions on the test set
+  pd <- predict(null.model, newdata = df.test, type = 'response')
+  predicted_class <- ifelse(pd > 0.5, 1, 0)
+  
+  # ROC analysis and AUC calculation
+  g <- roc(response = as.numeric(df.test$Loan_Status == 1), 
+           predictor = pd, print.auc = TRUE, 
+           algorithm = 2, levels = c(0, 1), direction = "<")
+  
+  auclist <- c(auclist, as.numeric(g$auc))
+}
+# Averaging the metrics
+benchmark_auc <- mean(auclist)
+
+
+benchmark_auc
+```
+
+Talk about this
+
+```{r}
+library(pROC)
+library(caret)
+
+set.seed(123457)
+train.prop <- 0.80
+auclist <- c()
+residual_deviances <- c()
+accuracies <- c()
+recalls <- c()
+precisions <- c()
+f1_scores <- c()
+
+for (t in 1:500){
+    # Splitting the data
+    strats <- df_cleaned$Loan_Status
+    rr <- split(1:length(strats), strats)
+    idx <- sort(as.numeric(unlist(sapply(rr, function(x) sample(x, length(x) * train.prop)))))
+    df.train <- df_cleaned[idx, ]
+    df.test <- df_cleaned[-idx, ]
+  
+    # Training the model on the training set
+    full.logit <- glm(Loan_Status ~ ., data = df.train, family = binomial(link = "logit"))
+  
+    # Residual Deviance
+    residual_deviances <- c(residual_deviances, full.logit$deviance)
+
+    # Making predictions on the test set
+    pd <- predict(full.logit, newdata = df.test, type = 'response')
+    predicted_class <- ifelse(pd > 0.5, 1, 0)
+
+    # ROC analysis and AUC calculation
+    g <- roc(response = df.test$Loan_Status, predictor = pd, print.auc = TRUE, algorithm = 2, levels = c(0, 1), direction = "<")
+    auclist <- c(auclist, as.numeric(g$auc))
+
+    # Confusion Matrix and related metrics
+    cm <- confusionMatrix(as.factor(predicted_class), as.factor(df.test$Loan_Status))
+    accuracies <- c(accuracies, cm$overall['Accuracy'])
+    recalls <- c(recalls, cm$byClass['Sensitivity'])
+    precisions <- c(precisions, cm$byClass['Precision'])
+    f1_scores <- c(f1_scores, cm$byClass['F1'])
+}
+
+# Calculating averages
+benchmark_auc <- mean(auclist)
+average_residual_deviance <- mean(residual_deviances)
+average_accuracy <- mean(accuracies)
+average_recall <- mean(recalls)
+average_precision <- mean(precisions)
+average_f1_score <- mean(f1_scores)
+
+list(
+  benchmark_auc = benchmark_auc,
+  average_residual_deviance = average_residual_deviance,
+  average_accuracy = average_accuracy,
+  average_recall = average_recall,
+  average_precision = average_precision,
+  average_f1_score = average_f1_score
+)
+
+```
+
+**Good Predictive Ability**: An AUC score of 0.75 suggests that the model has a good level of predictive accuracy. In practical terms, this means that there's an 75% chance that the model will correctly distinguish between a positive and a negative instance when randomly picking one of each.
+
+```{r}
+library(pROC)
+library(caret)
+
+set.seed(123457)
+train.prop <- 0.80
+auclist <- c()
+residual_deviances <- c()
+null_deviances <- c()
+accuracies <- c()
+recalls <- c()
+precisions <- c()
+f1_scores <- c()
+
+for (t in 1:500){
+    # Splitting the data
+    strats <- df_cleaned$Loan_Status
+    rr <- split(1:length(strats), strats)
+    idx <- sort(as.numeric(unlist(sapply(rr, function(x) sample(x, length(x) * train.prop)))))
+    df.train <- df_cleaned[idx, ]
+    df.test <- df_cleaned[-idx, ]
+  
+    # Training the model on the training set
+    both.logit <- glm(Loan_Status ~ Credit_History + Property_Area + Married + LoanAmount, data = df.train, family = binomial(link = "logit"))
+
+    # Making predictions on the test set
+    pd <- predict(both.logit, newdata = df.test, type = 'response')
+    predicted_class <- ifelse(pd > 0.5, 1, 0)
+
+    # ROC analysis and AUC calculation
+    g <- roc(response = as.numeric(df.test$Loan_Status == 1), predictor = pd, print.auc = TRUE, algorithm = 2, levels = c(0, 1), direction = "<")
+    auclist <- c(auclist, as.numeric(g$auc))
+
+    # Confusion Matrix and related metrics
+    cm <- confusionMatrix(as.factor(predicted_class), as.factor(df.test$Loan_Status))
+    accuracies <- c(accuracies, cm$overall['Accuracy'])
+    recalls <- c(recalls, cm$byClass['Sensitivity'])
+    precisions <- c(precisions, cm$byClass['Precision'])
+    f1_scores <- c(f1_scores, cm$byClass['F1'])
+
+    # Residual and Null Deviance
+    residual_deviances <- c(residual_deviances, both.logit$deviance)
+    null_deviances <- c(null_deviances, both.logit$null.deviance)
+}
+
+# Calculating averages
+benchmark_auc <- mean(auclist)
+average_residual_deviance <- mean(residual_deviances)
+average_null_deviance <- mean(null_deviances)
+average_accuracy <- mean(accuracies)
+average_recall <- mean(recalls)
+average_precision <- mean(precisions)
+average_f1_score <- mean(f1_scores)
+
+list(
+  benchmark_auc = benchmark_auc,
+  average_residual_deviance = average_residual_deviance,
+  average_null_deviance = average_null_deviance,
+  average_accuracy = average_accuracy,
+  average_recall = average_recall,
+  average_precision = average_precision,
+  average_f1_score = average_f1_score
+)
+
+```
+
+The results of our model evaluation over 500 iterations show an average AUC of 0.7783, indicating a good ability to distinguish between the two classes of **`Loan_Status`**. The average residual deviance is 352.3706, significantly lower than the average null deviance of 473.0564, suggesting that the predictors in our model add substantial explanatory power.
+
+In terms of classification metrics, the average accuracy is 0.8109, meaning my model correctly predicts the **`Loan_Status`** 81.09% of the time. However, the average recall is relatively low at 0.4365, indicating that the model might be missing a significant number of true positive cases. On the other hand, the average precision is high at 0.9033, showing that when the model predicts a positive case, it is correct 90.33% of the time. The average F1 score is 0.5841, reflecting a moderate balance between precision and recall, though leaning more towards precision.
+
+```{r}
+library(rpart)
+library(rpart.plot)
+library(caret)
+```
+
+```{r}
+# Build the decision tree model
+fit.allp <- rpart(Loan_Status ~ ., method = "class", data = df.train,
+                  control = rpart.control(minsplit = 1, cp = 0.001))
+printcp(fit.allp) 
+
+# Find the optimal complexity parameter
+cp <- fit.allp$cptable[which.min(fit.allp$cptable[,"xerror"]),"CP"]
+xerr <- fit.allp$cptable[which.min(fit.allp$cptable[,"xerror"]),"xerror"]
+
+# Plot the complexity parameter plot
+plotcp(fit.allp)
+
+# Detailed summary of the model
+summary(fit.allp)
+
+# Visualize the tree
+rpart.plot(fit.allp, extra = "auto")
+
+# Predict on the test set
+test_df <- data.frame(actual = df.test$Loan_Status, pred = NA)
+test_df$pred <- predict(fit.allp, newdata = df.test, type = "class")
+
+# Generate the confusion matrix
+conf_matrix_base <- table(test_df$actual, test_df$pred)
+
+# Calculate sensitivity and specificity
+sensitivity(conf_matrix_base, positive = "1")
+specificity(conf_matrix_base, negative = "0")
+
+# Calculate misclassification error rate
+mis.rate <- sum(conf_matrix_base[1,2], conf_matrix_base[2,1]) / sum(conf_matrix_base)
+
+# Prune the tree if necessary
+pfit.allp <- prune(fit.allp, cp = cp)
+rpart.plot(pfit.allp, extra = "auto")
+
+# Predict on the test set with the pruned tree
+test_df$pred <- predict(pfit.allp, newdata = df.test, type = "class")
+
+# Generate the confusion matrix for the pruned tree
+conf_matrix_pruned_tree <- table(test_df$actual, test_df$pred)
+
+# Calculate sensitivity and specificity for the pruned tree
+sensitivity(conf_matrix_pruned_tree, positive = "1")
+specificity(conf_matrix_pruned_tree, negative = "0")
+
+# Calculate misclassification error rate for the pruned tree
+mis.rate_pruned <- sum(conf_matrix_pruned_tree[1,2], conf_matrix_pruned_tree[2,1]) / sum(conf_matrix_pruned_tree)
+
+# Calculate performance metrics
+library(pROC)
+
+# Calculate the AUC and plot the ROC curve
+roc_obj <- roc(as.numeric(as.character(test_df$actual)), as.numeric(as.character(test_df$pred)))
+auc_value <- auc(roc_obj)
+
+# Print AUC value
+print(paste("AUC:", auc_value))
+
+# Plot the ROC curve
+plot(roc_obj, main = "ROC Curve")
+abline(a = 0, b = 1, col = "red")
+
+# Calculate sensitivity and specificity
+sens <- sensitivity(conf_matrix_base, positive = "1")
+spec <- specificity(conf_matrix_base, negative = "0")
+
+# Calculate precision
+prec <- posPredValue(conf_matrix_base, positive = "1", negative = "0")
+
+# Calculate accuracy
+acc <- sum(diag(conf_matrix_base)) / sum(conf_matrix_base)
+
+# Calculate F1 score
+f1 <- 2 * (prec * sens) / (prec + sens)
+
+# Create a list to hold the performance metrics
+performance_metrics <- list(
+  Sensitivity = sens,
+  Specificity = spec,
+  Precision = prec,
+  Accuracy = acc,
+  F1_Score = f1,
+  AUC = auc_value
+)
+
+# Print the performance metrics
+print(performance_metrics)
+```
+
+```{r}
+
+
+library(ranger)
+```
+
+```{r}
+
+strats <- df_cleaned$Loan_Status
+    rr <- split(1:length(strats), strats)
+    idx <- sort(as.numeric(unlist(sapply(rr, function(x) sample(x, length(x) * train.prop)))))
+    df.train <- df_cleaned[idx, ]
+    df.test <- df_cleaned[-idx, ]
+fit.rf.ranger <- ranger(df.train$Loan_Status ~ ., data=df.train, 
+                   importance='impurity', mtry=3)
+```
+
+```{r}
+print(fit.rf.ranger)
+```
+
+```{r}
+library(vip)
+(v1 <- vi(fit.rf.ranger))
+```
+
+```{r}
+vip(fit.rf.ranger)
+```
+
+1.  **Variable Importance**: For assessing variable importance, we chose 'impurity' as the mode. The most significant predictors turned out to be **`Credit_History`**, **`ApplicantIncome`**, and **`LoanAmount`**. This indicates that these factors are pivotal in predicting loan status.
+
+2.  **Split Rule**: The model utilized the 'gini' rule for splitting nodes, a common choice for classification tasks.
+
+3.  **Model Performance**: Our Out-Of-Bag (OOB) prediction error was 17.49%, which gives us an estimate of the model's error rate on new, unseen data. This rate suggests a fairly good level of accuracy, though it also points towards potential areas for improvement.
+
+```{r}
+pred <- predict(fit.rf.ranger, data = df.test)
+test_df <- data.frame(actual=df.test$Loan_Status,pred=NA)
+test_df$pred <- pred$predictions
+(conf_matrix_rf <- table(test_df$actual,test_df$pred)) #confusion matrix
+```
+
+```{r}
+library(caret)
+
+```
+
+```{r}
+# Missclassification error rate:
+(conf_matrix_rf[1,2] + conf_matrix_rf[2,1])/sum(conf_matrix_rf) 
+```
+
+```{r}
+# Calculating elements of the confusion matrix
+true_positives <- conf_matrix_rf[2,2]
+true_negatives <- conf_matrix_rf[1,1]
+false_positives <- conf_matrix_rf[1,2]
+false_negatives <- conf_matrix_rf[2,1]
+
+# Calculating Accuracy
+accuracy_rf <- (true_positives + true_negatives) / sum(conf_matrix_rf)
+
+# Calculating Precision and Recall
+precision_rf <- true_positives / (true_positives + false_positives)
+recall_rf <- true_positives / (true_positives + false_negatives)
+
+# Calculating F1 Score
+f1_score_rf <- 2 * (precision_rf * recall_rf) / (precision_rf + recall_rf)
+
+# Display the results
+list(accuracy = accuracy_rf, precision = precision_rf, recall = recall_rf, f1_score = f1_score_rf)
+
+```
+
+-   **Accuracy (78.35%)**: This shows that our model correctly predicts the outcome in about 78.35% of the cases. It's a measure of how often the model is right across both positive and negative predictions.
+
+-   **Precision (78.75%)**: This indicates that when our model predicts a positive outcome, it's accurate about 78.75% of the time. Precision is crucial, especially in scenarios where false positives have significant implications.
+
+-   **Recall (94.03%)**: Also known as sensitivity, this metric reveals that our model successfully identifies approximately 94.03% of all actual positive cases. High recall is vital in situations where missing true positives (false negatives) could be costly.
+
+-   **F1 Score (85.71%)**: The F1 score, being the harmonic mean of precision and recall, at around 85.71%, suggests that our model strikes a good balance between these two metrics.
+
+```{r}
+library(xgboost)
+library(Matrix)
+```
+
+```{r}
+# Transform the predictor matrix using dummy (or indictor or one-hot) encoding 
+matrix_predictors.train <- 
+  as.matrix(sparse.model.matrix(df.train$Loan_Status ~., data = df.train))[,-1]
+matrix_predictors.test <- 
+  as.matrix(sparse.model.matrix(df.test$Loan_Status ~., data = df.test))[,-1]
+```
+
+```{r}
+# Train dataset
+pred.train.gbm <- data.matrix(matrix_predictors.train) # predictors only
+#convert factor to numeric
+data.train.gbm <- as.numeric(as.character(df.train$Loan_Status)) 
+dtrain <- xgb.DMatrix(data = pred.train.gbm, label=data.train.gbm)
+# Test dataset
+pred.test.gbm <- data.matrix(matrix_predictors.test) # predictors only
+ #convert factor to numeric
+data.test.gbm <- as.numeric(as.character(df.test$Loan_Status))
+dtest <- xgb.DMatrix(data = pred.test.gbm, label=data.test.gbm)
+```
+
+```{r}
+watchlist <- list(train=dtrain, test=dtest)
+param <- list(
+  max_depth = 3, 
+  eta = 0.1, 
+  nthread = 2,
+  objective = "binary:logistic", 
+  eval_metric = "auc",
+  subsample = 0.8,
+  colsample_bytree = 0.8,
+  min_child_weight = 1,
+  lambda = 1,
+  alpha = 0
+)
+
+
+```
+
+```{r}
+model.xgb <- xgb.train(param, dtrain, nrounds = 1000, watchlist, early_stopping_rounds = 10)
+```
+
+```{r}
+pred.y.train <- predict(model.xgb, pred.train.gbm)
+prediction.train <- as.numeric(pred.y.train > 0.5)
+# Measure prediction accuracy on train data
+(tab<-table(data.train.gbm,prediction.train))
+```
+
+```{r}
+sum(diag(tab))/sum(tab)
+```
+
+```{r}
+pred.y = predict(model.xgb, pred.test.gbm)
+prediction <- as.numeric(pred.y > 0.5)
+print(head(prediction))
+```
+
+```{r}
+# Measure prediction accuracy on test data
+(tab1<-table(data.test.gbm,prediction))
+```
+
+```{r}
+# Confusion Matrix Values
+TP <- 63
+FP <- 16
+FN <- 4
+TN <- 14
+
+# Calculating Precision
+precision <- TP / (TP + FP)
+
+# Calculating Recall
+recall <- TP / (TP + FN)
+
+# Calculating F1 Score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+
+acc <- (TP+FP)/(TP +FP +FN + TN)
+
+# Printing the results
+cat("Precision:", precision, "\n")
+cat("Recall:", recall, "\n")
+cat("F1 Score:", f1_score, "\n")
+cat("Accuracy:", acc)
+
+```
